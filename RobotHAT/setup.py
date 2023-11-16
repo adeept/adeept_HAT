@@ -50,8 +50,15 @@ for x in range(1,4):
 		break
 
 for x in range(1,4):
-	if os.system("sudo pip3 install adafruit-pca9685") == 0:
+	if os.system("sudo pip3 install adafruit-circuitpython-motor") == 0:
 		break
+
+for x in range(1,4):
+	if os.system("sudo pip3 install adafruit-circuitpython-pca9685") == 0:
+		break
+
+# 
+
 
 for x in range(1,4):
 	if os.system("sudo pip3 install rpi_ws281x") == 0:
@@ -118,12 +125,12 @@ for x in range(1,4):
 	if os.system("sudo apt-get install -y util-linux procps hostapd iproute2 iw haveged dnsmasq") == 0:
 		break
 
-try: #fix conflict with onboard Raspberry Pi audio
-	os.system('sudo touch /etc/modprobe.d/snd-blacklist.conf')
-	with open("/etc/modprobe.d/snd-blacklist.conf",'w') as file_to_write:
-		file_to_write.write("blacklist snd_bcm2835")
-except:
-	pass
+# try: #fix conflict with onboard Raspberry Pi audio
+# 	os.system('sudo touch /etc/modprobe.d/snd-blacklist.conf')
+# 	with open("/etc/modprobe.d/snd-blacklist.conf",'w') as file_to_write:
+# 		file_to_write.write("blacklist snd_bcm2835")
+# except:
+# 	pass
 
 print('The program in Raspberry Pi has been installed, disconnected and restarted.')
 

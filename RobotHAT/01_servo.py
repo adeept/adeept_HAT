@@ -1,36 +1,55 @@
-from __future__ import division
+'''
+ SPDX-FileCopyrightText: 2021 ladyada for Adafruit Industries
+# SPDX-License-Identifier: MIT
+# Import the PCA9685 module. Available in the bundle and here:
+#   https://github.com/adafruit/Adafruit_CircuitPython_PCA9685
+# sudo pip3 install adafruit-circuitpython-motor
+# sudo pip3 install adafruit-circuitpython-pca9685
+'''
 import time
-import RPi.GPIO as GPIO
-import Adafruit_PCA9685
+from board import SCL, SDA
+import busio
+from adafruit_motor import servo
+from adafruit_pca9685 import PCA9685
 
 
-pwm = Adafruit_PCA9685.PCA9685()
-pwm.set_pwm_freq(50)
+i2c = busio.I2C(SCL, SDA)
+# Create a simple PCA9685 class instance.
+pca = PCA9685(i2c, address=0x40) #default 0x40
 
-PWM_init = 300  # angle about 90°
-PWM_Min = 100   # angle about 0°
-PWM_Max = 500   # angle about 180°
+pca.frequency = 50
 
-Channel = 0   # PWM port number.
+# servo7 = servo.Servo(pca.channels[7], min_pulse=580, max_pulse=2350)
+# servo7 = servo.Servo(pca.channels[7], min_pulse=500, max_pulse=2600)
+# servo7 = servo.Servo(pca.channels[7], min_pulse=400, max_pulse=2400)
+# servo7 = servo.Servo(pca.channels[7], min_pulse=600, max_pulse=2500)
+# servo7 = servo.Servo(pca.channels[7], min_pulse=500, max_pulse=2400)
+# The pulse range is 750 - 2250 by default. This range typically gives 135 degrees of
+# range, but the default is to use 180 degrees. You can specify the expected range if you wish:
+# servo7 = servo.Servo(pca.channels[7], actuation_range=135)
+def set_angle(ID, angle):
+    servo_angle = servo.Servo(pca.channels[ID], min_pulse=500, max_pulse=2400,actuation_range=180)
+    servo_angle.angle = angle
+'''
+# You can also specify the movement fractionally.
+fraction = 0.0
+while fraction < 1.0:
+    servo7.fraction = fraction
+    fraction += 0.01
+    time.sleep(0.03)
+pca.deinit()
+'''
+def test(channel):
+    for i in range(180):
+        set_angle(channel, i)
+        time.sleep(0.01)
+    time.sleep(0.5)
+    for i in range(180):
+        set_angle(channel, 180-i)
+        time.sleep(0.01)
+    time.sleep(0.5)
 
-# Set the value of PWM to control rotation.
-def servo_value(Channel, value):  # The value range is between 100-500.
-    pwm.set_pwm(Channel, 0, value)
-
-# Set the angle of pwm to control the rotation.
-def servo_angle(Channel, angle):  # The angle range is between 0-180 .
-    value = int(4096*((angle*11)+500)/20000+0.5) # Conversion angle value.
-    pwm.set_pwm(Channel, 0, value)
-
-if __name__ == "__main__": 
-    
+if __name__ == "__main__":
+    channel = 0
     while True:
-        servo_angle(0, 0)   # Servo of port0 Rotate to 0 degrees.
-        time.sleep(1)
-        servo_angle(0, 90)  # Rotate to 90 degrees.
-        time.sleep(1)
-        servo_angle(0, 180) # Rotate to 180 degrees.
-        time.sleep(1)
-
-
-
+        test(channel)
