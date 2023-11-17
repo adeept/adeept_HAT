@@ -125,12 +125,12 @@ for x in range(1,4):
 	if os.system("sudo apt-get install -y util-linux procps hostapd iproute2 iw haveged dnsmasq") == 0:
 		break
 
-# try: #fix conflict with onboard Raspberry Pi audio
-# 	os.system('sudo touch /etc/modprobe.d/snd-blacklist.conf')
-# 	with open("/etc/modprobe.d/snd-blacklist.conf",'w') as file_to_write:
-# 		file_to_write.write("blacklist snd_bcm2835")
-# except:
-# 	pass
+try: #fix conflict with onboard Raspberry Pi audio
+	os.system('sudo touch /etc/modprobe.d/snd-blacklist.conf')
+	with open("/etc/modprobe.d/snd-blacklist.conf",'w') as file_to_write:
+		file_to_write.write("blacklist snd_bcm2835")
+except:
+	pass
 
 print('The program in Raspberry Pi has been installed, disconnected and restarted.')
 
